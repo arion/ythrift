@@ -6,16 +6,16 @@ import configJson from '../config/config';
 const basename = path.basename(__filename);
 const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
 
-const config = configJson[env];
+const sequelizeConfig = configJson[env];
 
 console.log('this is the environment: ', env);
 
 const db = {};
 
 let sequelize;
-if (config.environment === 'production') {
+if (sequelizeConfig.environment === 'production') {
   sequelize = new Sequelize(
-    process.env[config.use_env_variable], config
+    process.env[sequelizeConfig.use_env_variable], sequelizeConfig
   );
   sequelize = new Sequelize(
     process.env.DB_NAME,
@@ -33,7 +33,7 @@ if (config.environment === 'production') {
   );
 } else {
   sequelize = new Sequelize(
-    config.database, config.username, config.password, config
+    sequelizeConfig.database, sequelizeConfig.username, sequelizeConfig.password, sequelizeConfig
   );
 }
 

@@ -1,4 +1,4 @@
-import config from 'dotenv';
+import config from 'dotenv-flow';
 import express from 'express'
 import bodyParser from 'body-parser';
 import morgan from 'morgan'
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan('combined'));
 
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 app.use('/api/v1/users', userRoutes);
 
