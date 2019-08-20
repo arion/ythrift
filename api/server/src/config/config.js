@@ -18,7 +18,8 @@ module.exports = {
     username: 'postgres',
     password: null,
     host: '127.0.0.1',
-    dialect: 'postgres'
+    dialect: 'postgres',
+    logging: false
   },
 
   production: {

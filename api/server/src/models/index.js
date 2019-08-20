@@ -15,9 +15,6 @@ const db = {};
 let sequelize;
 if (sequelizeConfig.environment === 'production') {
   sequelize = new Sequelize(
-    process.env[sequelizeConfig.use_env_variable], sequelizeConfig
-  );
-  sequelize = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
     process.env.DB_PASS, {

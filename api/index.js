@@ -11,7 +11,9 @@ const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(morgan('combined'));
+if (process.env.NODE_ENV !== 'test') {
+   app.use(morgan('combined'));
+}
 
 const port = process.env.PORT;
 
