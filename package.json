@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec babel-node ./api/index.js",
+    "client": "cd client && yarn start",
+    "server": "nodemon --exec babel-node ./api/index.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "test": "mocha --require @babel/register './api/server/src/test/**/**_spec.js'"
   },
   "keywords": [],
@@ -24,9 +26,11 @@
     "dotenv": "^8.1.0",
     "dotenv-flow": "^3.1.0",
     "express": "^4.17.1",
-    "global": "^4.4.0",
+    "http-proxy-middleware": "^0.19.1",
     "morgan": "^1.9.1",
     "params": "^0.1.1",
+    "passport": "^0.4.0",
+    "passport-google-oauth2": "^0.2.0",
     "path": "^0.12.7",
     "pg": "^7.12.1",
     "pg-hstore": "^2.3.3",

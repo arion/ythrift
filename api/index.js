@@ -2,7 +2,7 @@ import config from 'dotenv-flow';
 import express from 'express'
 import bodyParser from 'body-parser';
 import morgan from 'morgan'
-
+import PassportUtil from '../api/server/utils/passport';
 import userRoutes from './server/routes/user_routes'
 
 config.config();
@@ -15,12 +15,14 @@ if (process.env.NODE_ENV !== 'test') {
    app.use(morgan('combined'));
 }
 
+const passportUtil = new PassportUtil(app);
+
 const port = process.env.PORT;
 
 app.use('/api/v1/users', userRoutes);
 
 // when a random route is inputed
-app.get('*', (req, res) => res.status(200).send({
+app.get('/api', passportUtil.loggedIn, (req, res) => res.status(200).send({
    message: 'Welcome to this API.'
 }));
 
