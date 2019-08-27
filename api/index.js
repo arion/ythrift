@@ -19,7 +19,7 @@ const passportUtil = new PassportUtil(app);
 
 const port = process.env.PORT;
 
-app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/users', passportUtil.loggedIn, userRoutes);
 
 // when a random route is inputed
 app.get('/api', passportUtil.loggedIn, (req, res) => res.status(200).send({

@@ -1,25 +1,20 @@
-import React from 'react';
-import { map } from 'lodash';
-
-interface IUser {
-  id: number,
-  username: string,
-  email: string
-}
+import React from 'react'
+import { map } from 'lodash'
+import { IUser } from '../utils/interfaces'
 
 interface IState {
-  users: IUser[];
+  users: IUser[]
 }
 
 const callApi = async (url: string) => {
-  const response = await fetch(url);
-  const body = await response.json();
-  if (response.status !== 200) throw Error(body.message);
+  const response = await fetch(url)
+  const body = await response.json()
+  if (response.status !== 200) throw Error(body.message)
 
-  return body.data as IUser[];
+  return body.data as IUser[]
 }
 
-class UsersList extends React.Component<{}, IState> {
+class UsersPage extends React.Component<{}, IState> {
   state: IState = {
     users: [] as IUser[]
   }
@@ -39,8 +34,8 @@ class UsersList extends React.Component<{}, IState> {
           </p>
         ))}
       </div>
-    );
+    )
   }
 }
 
-export default UsersList;
+export default UsersPage

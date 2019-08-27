@@ -61,7 +61,7 @@ export default class PassportUtil {
       next();
     } else {
       console.log('######### not have user');
-      res.redirect('/');
+      res.sendStatus(403);
     }
   }
 
