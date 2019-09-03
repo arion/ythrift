@@ -57,10 +57,8 @@ export default class PassportUtil {
 
   loggedIn(req, res, next) {
     if (req.user) {
-      console.log('######### user:', req.user);
       next();
     } else {
-      console.log('######### not have user');
       res.sendStatus(403);
     }
   }

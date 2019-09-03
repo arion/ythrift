@@ -1,14 +1,10 @@
 import React from 'react'
-import { IUser } from '../utils/interfaces'
-
-interface AuthContextProps { 
-  currentUser: IUser | null
-  fetchUser: () => boolean
-  logOut: () => void
-};
+import { IUser, AuthContextProps } from '../utils/interfaces'
+import { getJson } from '../utils/fetch'
 
 interface IState {
-  currentUser: IUser | null
+  loaded: boolean;
+  currentUser: IUser | null;
 };
 
 const AuthContext = React.createContext<Partial<AuthContextProps>>({});
@@ -17,27 +13,19 @@ const fakeUser = {id: 1, username: 'Denis', email: 'mearion@gmail.com'};
 
 class AuthProvider extends React.Component<{}, IState> {
   state: IState = {
-    currentUser: null
+    currentUser: null,
+    loaded: false
   }
 
-  fetchUser = () => {
-    if (this.state.currentUser) { return true }
-    // TODO: make this async with check on server side
-    this.setState({currentUser: fakeUser})
-    return true
-  }
-
-  logOut = () => {
-    this.setState({currentUser: null})
+  componentDidMount() {
+    getJson('/api/v1/account').then((user) => this.setState({ currentUser: user })).finally(() => this.setState({ loaded: true }))
   }
 
   render() {
     return (
       <AuthContext.Provider
         value={{
-          ...this.state,
-          fetchUser: this.fetchUser,
-          logOut: this.logOut
+          ...this.state
         }}
       >
         {this.props.children}
