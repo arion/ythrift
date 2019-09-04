@@ -7,6 +7,7 @@ import PassportUtil from '../api/server/utils/passport'
 
 import userRoutes from './server/routes/user_routes'
 import accountRoutes from './server/routes/account_routes'
+import categoryRoutes from './server/routes/category_routes'
 
 config.config()
 
@@ -34,6 +35,7 @@ const port = process.env.PORT
 
 app.use('/api/v1/users', passportUtil.loggedIn, userRoutes)
 app.use('/api/v1/account', passportUtil.loggedIn, accountRoutes)
+app.use('/api/v1/categories', passportUtil.loggedIn, categoryRoutes)
 
 // when a random route is inputed
 app.get('/api', (req, res) => res.status(200).send({

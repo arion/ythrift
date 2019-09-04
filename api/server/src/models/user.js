@@ -26,7 +26,7 @@ export default (sequelize, DataTypes) => {
   }, {});
   User.associate = function(models) {
     // associations can be defined here
-    User.hasMany(models.Category, { foreignKey: 'userId', as: 'Categories' });
+    User.hasMany(models.Category, { foreignKey: 'userId', as: 'categories' });
   };
   return User;
 };
