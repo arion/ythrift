@@ -6,6 +6,7 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon --exec babel-node ./api/index.js",
+    "console": "npx babel-node ./api/console.js --experimental-repl-await",
     "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\"",
     "test": "mocha --require @babel/register './api/server/src/test/**/**_spec.js'"
   },
