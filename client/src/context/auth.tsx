@@ -1,40 +1,38 @@
-import React from 'react'
-import { IUser, AuthContextProps } from '../utils/interfaces'
+import React, { useState, createContext, useEffect, FC, Dispatch, SetStateAction } from 'react'
+import { IUser } from '../utils/interfaces'
 import { getJson } from '../utils/fetch'
 
-interface IState {
-  loaded: boolean;
-  currentUser: IUser | null;
-};
+interface IAuthContext {
+  currentUser: IUser | undefined,
+  setCurrentUser: Dispatch<IUser | undefined>,
+  loaded: boolean,
+}
 
-const AuthContext = React.createContext<Partial<AuthContextProps>>({});
+export const Context = createContext<IAuthContext>({
+  currentUser: undefined,
+  setCurrentUser: () => null,
+  loaded: false
+});
 
 const fakeUser = {id: 1, username: 'Denis', email: 'mearion@gmail.com'};
 
-class AuthProvider extends React.Component<{}, IState> {
-  state: IState = {
-    currentUser: null,
-    loaded: false
-  }
+const AuthProvider: FC<{}> = (props) => {
+  const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined)
+  const [loaded, setLoaded] = useState<boolean>(false)
 
-  componentDidMount() {
-    getJson('/api/v1/account').then((user) => this.setState({ currentUser: user })).finally(() => this.setState({ loaded: true }))
-  }
+  useEffect(() => {
+    if (loaded) { return }
+    getJson('/api/v1/account').then(setCurrentUser).finally(() => setLoaded(true))
+  })
 
-  render() {
-    return (
-      <AuthContext.Provider
-        value={{
-          ...this.state
-        }}
-      >
-        {this.props.children}
-      </AuthContext.Provider>
-    )
-  }
+  return (
+    <Context.Provider
+      value={{currentUser, setCurrentUser, loaded}}
+    >
+      {props.children}
+    </Context.Provider>
+  )
 }
 
 
-
-export const Consumer = AuthContext.Consumer
 export const Provider = AuthProvider
