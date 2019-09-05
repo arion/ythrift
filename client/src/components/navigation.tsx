@@ -1,4 +1,4 @@
-import React, { useContext, FC, Fragment, SetStateAction, Dispatch, ComponentType }  from 'react'
+import React, { useContext, FC, SetStateAction, Dispatch }  from 'react'
 import { Link } from "react-router-dom"
 
 import * as Store from '../context/store'
@@ -13,9 +13,9 @@ const Navigation: FC<IProps> = (props) => {
 
   return (
     <div className="chiller-theme">
-      <a id="show-sidebar" className="btn btn-sm btn-dark" onClick={() => props.setNavToggle(true)} href="javascript:void(0);">
+      <button id="show-sidebar" className="btn btn-sm btn-dark" onClick={() => props.setNavToggle(true)}>
         <i className="fas fa-bars"></i>
-      </a>
+      </button>
       <nav id="sidebar" className="sidebar-wrapper">
         <div className="sidebar-content">
           <div className="sidebar-brand">

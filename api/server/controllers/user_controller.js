@@ -22,18 +22,6 @@ class UserController {
     }
   }
 
-  static async create(req, res) {
-    const attributes = params(req.body).only(['username', 'email', 'provider', 'token']);
-    try {
-      const resource = await User.create(attributes);
-      util.setSuccess(201, 'Added!', resource);
-      return util.send(res);
-    } catch (error) {
-      util.setError(400, error.message);
-      return util.send(res);
-    }
-  }
-
   static async update(req, res) {
     const attributes = params(req.body).only(['username']);
     const { id } = req.params;
@@ -79,28 +67,28 @@ class UserController {
     }
   }
 
-  static async delete(req, res) {
-    const { id } = req.params;
+  // static async delete(req, res) {
+  //   const { id } = req.params;
 
-    if (!Number(id)) {
-      util.setError(400, 'Please provide a numeric value');
-      return util.send(res);
-    }
+  //   if (!Number(id)) {
+  //     util.setError(400, 'Please provide a numeric value');
+  //     return util.send(res);
+  //   }
 
-    try {
-      const resource = await User.findOne({ where: { id: Number(id) } });
+  //   try {
+  //     const resource = await User.findOne({ where: { id: Number(id) } });
 
-      if (resource && resource.destroy()) {
-        util.setSuccess(200, 'User deleted');
-      } else {
-        util.setError(404, `User with the id ${id} cannot be found`);
-      }
-      return util.send(res);
-    } catch (error) {
-      util.setError(400, error);
-      return util.send(res);
-    }
-  }
+  //     if (resource && resource.destroy()) {
+  //       util.setSuccess(200, 'User deleted');
+  //     } else {
+  //       util.setError(404, `User with the id ${id} cannot be found`);
+  //     }
+  //     return util.send(res);
+  //   } catch (error) {
+  //     util.setError(400, error);
+  //     return util.send(res);
+  //   }
+  // }
 };
 
 export default UserController;

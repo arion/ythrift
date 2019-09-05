@@ -8,9 +8,9 @@ const LandingPage: React.FC = () => {
   return (
     <div>
       <h2>This is a landing page!</h2>
-      {currentUser && (
+      {currentUser ? (
         <h4>Hellow, {currentUser.username}!</h4>
-      ) || (
+      ) : (
         <a href="/auth/google">Sign In with Google</a>
       )}
     </div>

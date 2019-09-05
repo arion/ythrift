@@ -22,6 +22,7 @@ describe("Users", () => {
     it("should get all users record", (done) => {
       chai.request(app)
         .get('/api/v1/users')
+        .set('Authorization', 'bearer ' + user.jwtToken)
         .end((err, res) => {
           console.log(res)
           res.should.have.status(200);
@@ -36,6 +37,7 @@ describe("Users", () => {
     it("should get a single user record", (done) => {
       chai.request(app)
         .get(`/api/v1/users/${user.id}`)
+        .set('Authorization', 'bearer ' + user.jwtToken)
         .end((err, res) => {
           res.should.have.status(200);
           res.should.be.json;
@@ -50,21 +52,9 @@ describe("Users", () => {
       const id = 5;
       chai.request(app)
         .get(`/api/v1/users/${id}`)
+        .set('Authorization', 'bearer ' + user.jwtToken)
         .end((err, res) => {
           res.should.have.status(404);
-          done();
-        });
-    });
-
-    it('should create a SINGLE user on /api/v1/users POST', function(done) {
-      chai.request(app)
-        .post(`/api/v1/users`)
-        .send({'username': 'New Name', email: 'test@test.com', provider: 'google', token: 'fake'})
-        .end(function(error, res){
-          res.should.have.status(201);
-          res.should.be.json;
-          res.body.should.be.a('object');
-          res.body.data.username.should.equal('New Name');
           done();
         });
     });
@@ -72,6 +62,7 @@ describe("Users", () => {
     it('should update a SINGLE user on /api/v1/users/<id> PUT', function(done) {
       chai.request(app)
         .put(`/api/v1/users/${user.id}`)
+        .set('Authorization', 'bearer ' + user.jwtToken)
         .send({'username': 'New Name'})
         .end(function(error, res){
           res.should.have.status(200);
@@ -79,21 +70,6 @@ describe("Users", () => {
           res.body.should.be.a('object');
           res.body.data.username.should.equal('New Name');
           done();
-        });
-    });
-
-    it('should delete a SINGLE user on /api/v1/users/<id> DELETE', function(done) {
-      chai.request(app)
-        .delete(`/api/v1/users/${user.id}`)
-        .end(function(error, response){
-          response.should.have.status(200);
-          response.should.be.json;
-          chai.request(app)
-            .get(`/api/v1/users/${user.id}`)
-            .end((err, res) => {
-              res.should.have.status(404);
-              done();
-            });
         });
     });
   });

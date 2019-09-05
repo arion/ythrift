@@ -12,7 +12,8 @@ class AccountController {
       const resource = await User.findOne({ where: { id: Number(req.user.id) } })
 
       if (!resource) {
-        util.setError(404, `Cannot find user with the id ${id}`)
+        req.logout()
+        util.setError(401, 'Unauthorized')
       } else {
         util.setSuccess(200, 'Found user', resource)
       }
