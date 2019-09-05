@@ -23,7 +23,7 @@ class CategoryController {
   }
 
   static async create(req, res) {
-    const attributes = params(req.body).only(['name', 'parentId']);
+    const attributes = params(req.body).only(['name', 'parentId', 'kind']);
     attributes.userId = req.user.id
     try {
       const resource = await Category.create(attributes);
@@ -36,7 +36,7 @@ class CategoryController {
   }
 
   static async update(req, res) {
-    const attributes = params(req.body).only(['name']);
+    const attributes = params(req.body).only(['name', 'archivedAt', 'kind', 'parentId']);
     const { id } = req.params;
     if (!Number(id)) {
       util.setError(400, 'Please input a valid numeric value');
@@ -53,29 +53,6 @@ class CategoryController {
       return util.send(res);
     } catch (error) {
       util.setError(404, error);
-      return util.send(res);
-    }
-  }
-
-  static async delete(req, res) {
-    const { id } = req.params;
-
-    if (!Number(id)) {
-      util.setError(400, 'Please provide a numeric value');
-      return util.send(res);
-    }
-
-    try {
-      const resource = await Category.findOne({ where: { id: Number(id), userId: req.user.id } });
-
-      if (resource && resource.destroy()) {
-        util.setSuccess(200, 'Resource deleted');
-      } else {
-        util.setError(404, `Resource with the id ${id} cannot be found`);
-      }
-      return util.send(res);
-    } catch (error) {
-      util.setError(400, error);
       return util.send(res);
     }
   }

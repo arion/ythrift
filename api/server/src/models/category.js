@@ -4,10 +4,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    kind: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        isIn: [['income', 'expense', 'saving']],
+      },
+      defaultValue: 'expense'
+    },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    }
+    },
+    archivedAt: {
+      type: DataTypes.DATE
+    },
   }, {})
   Category.associate = function(models) {
     // associations can be defined here

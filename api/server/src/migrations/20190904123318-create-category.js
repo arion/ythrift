@@ -9,6 +9,11 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      kind: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       parentId: {
@@ -24,6 +29,9 @@ module.exports = {
           model: 'Users',
           key: 'id',
         },
+      },
+      archivedAt: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
