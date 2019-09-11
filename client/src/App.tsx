@@ -6,10 +6,13 @@ import cn from 'classnames'
 import * as Store from './context/store'
 
 import PrivateRoute from './components/private_route'
+import HeaderNavigation from './components/header_navigation'
 import Navigation from './components/navigation'
 
 import LandingPage from './pages/landing'
 import UsersPage from './pages/users'
+
+import './stylesheets/style.default.css'
 
 const App: React.FC = () => {
   const [navToggle, setNavToggle] = useState(false)
@@ -17,12 +20,13 @@ const App: React.FC = () => {
   return (
     <Router>
       <Store.Context>
-        <div className={cn('page-wrapper', { 'toggled': navToggle })}>
-          <Navigation setNavToggle={setNavToggle}></Navigation>
-          <main className="page-content">
+        <HeaderNavigation setNavToggle={setNavToggle} navToggle={navToggle}/>
+        <div className="page-content d-flex align-items-stretch"> 
+          <Navigation navToggle={navToggle}></Navigation>
+          <div className={cn('content-inner', { 'active': navToggle })}>
             <Route path="/" exact component={LandingPage} />
             <PrivateRoute path="/users" component={UsersPage} />
-          </main>
+          </div>
         </div>
       </Store.Context>
     </Router>

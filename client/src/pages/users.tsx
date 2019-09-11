@@ -21,11 +21,18 @@ class UsersPage extends React.Component<{}, IState> {
 
     return (
       <div>
-        {map(users, (user) => (
-          <p key={user.id}>
-            {user.id} - {user.username}
-          </p>
-        ))}
+        <header className="page-header">
+          <div className="container-fluid">
+            <h2 className="no-margin-bottom">Users page</h2>
+          </div>
+        </header>
+        <section>
+          {map(users, (user) => (
+            <p key={user.id}>
+              {user.id} - {user.username}
+            </p>
+          ))}
+        </section>
       </div>
     )
   }
