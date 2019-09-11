@@ -28,7 +28,7 @@ const AuthProvider: FC<{}> = (props) => {
       .catch(() => setRedirecting(true))
   }, [loaded])
 
-  if (redirecting) { return <Redirect to="/" /> }
+  if (redirecting && window.location.pathname !== '/') { return <Redirect to="/" /> }
 
   return (
     <Context.Provider

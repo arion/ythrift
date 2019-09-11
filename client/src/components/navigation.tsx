@@ -1,24 +1,22 @@
-import React, { useContext, FC, SetStateAction, Dispatch }  from 'react'
-import { Link } from "react-router-dom"
+import React, { FC }  from 'react'
+import { Link, withRouter, RouteComponentProps } from "react-router-dom"
 
 import cn from 'classnames'
 
 interface IProps {
-  navToggle: boolean,
+  navToggle: boolean;
 }
-
-const Navigation: FC<IProps> = (props) => {
-
+const Navigation: FC<IProps & RouteComponentProps<{}>> = (props) => {
   return (
     <nav className={cn('side-navbar', { 'shrinked': props.navToggle })}>
       <ul className="list-unstyled">
-        <li className="active">
+        <li className={props.location.pathname === '/' ? 'active' : undefined}>
           <Link to="/">
             <i className="fa fa-home"></i>
             Home
           </Link>
         </li>
-        <li>
+        <li className={props.location.pathname === '/users' ? 'active' : undefined}>
           <Link to="/users">
             <i className="fa fa-users"></i>
             Users
@@ -29,4 +27,4 @@ const Navigation: FC<IProps> = (props) => {
   )
 }
 
-export default Navigation
+export default withRouter(Navigation)

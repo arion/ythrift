@@ -12,6 +12,7 @@ import Navigation from './components/navigation'
 import LandingPage from './pages/landing'
 import UsersPage from './pages/users'
 
+import './stylesheets/custom.css'
 import './stylesheets/style.default.css'
 
 const App: React.FC = () => {

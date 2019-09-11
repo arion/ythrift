@@ -20,7 +20,7 @@ const HeaderNavigation: FC<IProps> = (props) => {
             {/* <!-- Navbar Header--> */}
             <div className="navbar-header">
               {/* <!-- Toggle Button--> */}
-              <a id="toggle-btn" href="#" className={cn('menu-btn', { 'active' : !props.navToggle })} onClick={() => props.setNavToggle(!props.navToggle)}>
+              <a id="toggle-btn" tabIndex={0} className={cn('menu-btn', { 'active' : !props.navToggle })} onClick={() => props.setNavToggle(!props.navToggle)}>
                 <span></span><span></span><span></span>
               </a>
               {/* <!-- Navbar Brand --> */}
@@ -35,7 +35,9 @@ const HeaderNavigation: FC<IProps> = (props) => {
               { !currentUser && (
                 <li className="nav-item">
                   <a href="/auth/google" className="nav-link login">
-                    <span className="d-none d-sm-inline">Sign In with Google</span><i className="fa fa-sign-in"></i>
+                    <span className="d-none d-sm-inline">Sign In with Google</span>
+                    &nbsp;
+                    <i className="fa fa-sign-in-alt"></i>
                   </a>
                 </li>
               ) }
@@ -43,7 +45,9 @@ const HeaderNavigation: FC<IProps> = (props) => {
               { currentUser && (
                 <li className="nav-item">
                   <a href="/auth/logout" className="nav-link logout">
-                    <span className="d-none d-sm-inline">Logout</span><i className="fa fa-sign-out-alt"></i>
+                    <span className="d-none d-sm-inline">Logout</span>
+                    &nbsp;
+                    <i className="fa fa-sign-out-alt"></i>
                   </a>
                 </li>
               ) }

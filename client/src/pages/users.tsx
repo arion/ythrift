@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { map } from 'lodash'
 import { IUser } from '../utils/interfaces'
 import { getJson } from '../utils/fetch'
@@ -7,7 +7,7 @@ interface IState {
   users: IUser[]
 }
 
-class UsersPage extends React.Component<{}, IState> {
+class UsersPage extends Component<{}, IState> {
   state: IState = {
     users: [] as IUser[]
   }
