@@ -13,13 +13,25 @@ const Navigation: FC<IProps & RouteComponentProps<{}>> = (props) => {
         <li className={props.location.pathname === '/' ? 'active' : undefined}>
           <Link to="/">
             <i className="fa fa-home"></i>
-            Home
+            Landing
           </Link>
         </li>
-        <li className={props.location.pathname === '/users' ? 'active' : undefined}>
-          <Link to="/users">
-            <i className="fa fa-users"></i>
-            Users
+        <li className={props.location.pathname === '/dashboard' ? 'active' : undefined}>
+          <Link to="/dashboard">
+            <i className="fa fa-money-bill-alt"></i>
+            Dashboard
+          </Link>
+        </li>
+        <li className={props.location.pathname === '/reports' ? 'active' : undefined}>
+          <Link to="/reports">
+            <i className="fa fa-chart-pie"></i>
+            Reports
+          </Link>
+        </li>
+        <li className={props.location.pathname === '/settings' ? 'active' : undefined}>
+          <Link to="/settings">
+            <i className="fa fa-cog"></i>
+            Settings
           </Link>
         </li>
       </ul>

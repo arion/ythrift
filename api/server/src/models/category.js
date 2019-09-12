@@ -8,7 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isIn: [['income', 'expense', 'saving']],
+        isIn: [['income', 'expense']],
       },
       defaultValue: 'expense'
     },

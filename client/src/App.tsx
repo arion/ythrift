@@ -10,7 +10,7 @@ import HeaderNavigation from './components/header_navigation'
 import Navigation from './components/navigation'
 
 import LandingPage from './pages/landing'
-import UsersPage from './pages/users'
+import DashboardPage from './pages/dashboard'
 
 import './stylesheets/custom.css'
 import './stylesheets/style.default.css'
@@ -26,7 +26,7 @@ const App: React.FC = () => {
           <Navigation navToggle={navToggle}></Navigation>
           <div className={cn('content-inner', { 'active': navToggle })}>
             <Route path="/" exact component={LandingPage} />
-            <PrivateRoute path="/users" component={UsersPage} />
+            <PrivateRoute path="/dashboard" component={DashboardPage} />
           </div>
         </div>
       </Store.Context>

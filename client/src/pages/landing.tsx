@@ -1,13 +1,11 @@
-import React from 'react'
+import React, { FC } from 'react'
 
-const LandingPage: React.FC = () => {
+import PageHeader from '../components/page_header'
+
+const LandingPage: FC = () => {
   return (
     <div>
-      <header className="page-header">
-        <div className="container-fluid">
-          <h2 className="no-margin-bottom">Gain Total Control of Your Money.</h2>
-        </div>
-      </header>
+      <PageHeader>Gain Total Control of Your Money.</PageHeader>
       <section>
         <div className="container-fluid">
           <div className="card">

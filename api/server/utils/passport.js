@@ -68,7 +68,7 @@ export default class PassportUtil {
       passport.authenticate('google', { failureRedirect: '/' }),
       function(req, res) {
           // Successful authentication, redirect home.
-          res.redirect('/')
+          res.redirect('/dashboard')
       })
 
     app.get('/auth/logout', function(req, res){
