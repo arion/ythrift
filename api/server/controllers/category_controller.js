@@ -19,9 +19,14 @@ class CategoryController {
     const endDate = moment(`${month}-${year}`, 'MM-YYYY').endOf('month').toDate()
 
     try {
-      // TODO: filter actuals and budgets by month and year (not archived  for this date categories should exists always)
       const collection = await Category.findAll({ 
-        where: { userId: req.user.id },
+        where: { 
+          userId: req.user.id,
+          [Op.or]: [
+            { archivedAt: { [Op.gte]: startDate } },
+            { archivedAt: null },
+          ],
+        },
         include: [
           { 
             model: ActualRow, 

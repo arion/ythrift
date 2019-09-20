@@ -1,28 +1,12 @@
 import React, { FC } from 'react'
 
-import PageHeader from '../components/page_header'
+import MonthSelector from '../components/month_selector'
 
 const DashboardPage: FC = () => {
   return (
     <div>
       <div className="datepicker-header container-fluid">
-        <div className="month-picker picker-element">
-          <div className="row">
-            <div className="col button-col">
-              <button className="btn btn-primary">
-                <i className="fa fa-chevron-circle-left"></i>
-              </button>
-            </div>
-            <div className="col date-col">
-              September 2019
-            </div>
-            <div className="col button-col">
-              <button className="btn btn-primary">
-                <i className="fa fa-chevron-circle-right"></i>
-              </button>
-            </div>
-          </div>
-        </div>
+        <MonthSelector />
       </div>
       <section className="dashboard">
         <div className="container-fluid">
@@ -54,11 +38,11 @@ const DashboardPage: FC = () => {
                       </tbody>
                     </table>
                     <div className="text-center">
-                      <a href="#">
+                      <button className='btn btn-link text-primary'>
                         Add new Category
                         &nbsp;
                         <i className="fa fa-plus"></i>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -87,11 +71,11 @@ const DashboardPage: FC = () => {
                       </tbody>
                     </table>
                     <div className="text-center">
-                      <a href="#">
+                      <button className='btn btn-link text-primary'>
                         Add new Category
                         &nbsp;
                         <i className="fa fa-plus"></i>
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>

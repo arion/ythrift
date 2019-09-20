@@ -20,9 +20,9 @@ const HeaderNavigation: FC<IProps> = (props) => {
             {/* <!-- Navbar Header--> */}
             <div className="navbar-header">
               {/* <!-- Toggle Button--> */}
-              <a id="toggle-btn" tabIndex={0} className={cn('menu-btn', { 'active' : !props.navToggle })} onClick={() => props.setNavToggle(!props.navToggle)}>
+              <button className={cn('menu-btn', { 'active' : !props.navToggle })} onClick={() => props.setNavToggle(!props.navToggle)}>
                 <span></span><span></span><span></span>
-              </a>
+              </button>
               {/* <!-- Navbar Brand --> */}
               <a href="index.html" className="navbar-brand d-none d-sm-inline-block">
                 <div className="brand-text d-none d-lg-inline-block"><span>y</span><strong>Thrift</strong></div>

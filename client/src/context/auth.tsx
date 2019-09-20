@@ -1,39 +1,58 @@
-import React, { useState, createContext, useEffect, FC, Dispatch } from 'react'
+import React, { useReducer, createContext, useEffect, FC } from 'react'
 import { IUser } from '../utils/interfaces'
-import { getJson } from '../utils/fetch'
+import { loadCurrentUser } from '../utils/api'
 import { Redirect } from "react-router-dom"
 
-interface IAuthContext {
+interface IState {
   currentUser: IUser | undefined,
-  setCurrentUser: Dispatch<IUser | undefined>,
   loaded: boolean,
+  redirecting: boolean,
 }
 
-export const Context = createContext<IAuthContext>({
+interface IAction {
+  type: String,
+  user?: IUser | undefined,
+}
+
+function reducer(state: IState, action : IAction) {
+  switch (action.type) {
+    case 'loading':
+      return { ...state, currentUser: undefined, loaded: false }
+    case 'loaded':
+      return { ...state, currentUser: action.user, loaded: true }
+    case 'failure':
+      return { ...state, redirecting: true, loaded: true }
+    default:
+      throw new Error()
+  }
+}
+
+export const Context = createContext<IState>({
   currentUser: undefined,
-  setCurrentUser: () => null,
-  loaded: false
-});
+  loaded: false,
+  redirecting: false
+})
 
 const AuthProvider: FC<{}> = (props) => {
-  const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined)
-  const [loaded, setLoaded] = useState<boolean>(false)
-  const [redirecting, setRedirecting] = useState<boolean>(false)
+  const initialState = {
+    currentUser: undefined,
+    loaded: false,
+    redirecting: false
+  }
+
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    if (loaded) { return }
-    getJson('/api/v1/account')
-      .then(setCurrentUser)
-      .finally(() => setLoaded(true))
-      .catch(() => setRedirecting(true))
-  }, [loaded])
+    if (state.loaded) { return }
+    loadCurrentUser()
+      .then((user) => dispatch({ type: 'loaded', user: user }))
+      .catch(() => dispatch({ type: 'failure' }))
+  }, [state.loaded])
 
-  if (redirecting && window.location.pathname !== '/') { return <Redirect to="/" /> }
+  if (state.redirecting && window.location.pathname !== '/') { return <Redirect to="/" /> }
 
   return (
-    <Context.Provider
-      value={{currentUser, setCurrentUser, loaded}}
-    >
+    <Context.Provider value={state}>
       {props.children}
     </Context.Provider>
   )

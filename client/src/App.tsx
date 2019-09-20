@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, FC } from 'react'
 import { BrowserRouter as Router, Route } from "react-router-dom"
 
 import cn from 'classnames'
@@ -15,7 +15,7 @@ import DashboardPage from './pages/dashboard'
 import './stylesheets/custom.css'
 import './stylesheets/style.default.css'
 
-const App: React.FC = () => {
+const App: FC = () => {
   const [navToggle, setNavToggle] = useState(false)
 
   return (

@@ -94,7 +94,7 @@ export default class PassportUtil {
       if (req.header('Authorization')) {
         passport.authenticate('bearer', { session: false })(req, res, next)
       } else {
-        res.sendStatus(403)
+        res.status(403).send({ error: "You don't have permissions to access. Please login first." })
       }
     }
   }

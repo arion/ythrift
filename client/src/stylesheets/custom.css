@@ -30,3 +30,8 @@ th.edit-cell i {
   color: #33b35a;
   display: none;
 }
+
+.menu-btn {
+  background: none;
+  border: none;
+}
