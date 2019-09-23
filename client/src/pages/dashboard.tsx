@@ -1,8 +1,47 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect } from 'react'
+import { sum, sumBy } from 'lodash'
 
 import MonthSelector from '../components/month_selector'
 
+import { useDispatch, useGlobalState } from '../utils/state'
+import { loadCategories } from '../utils/api'
+import CategoriesTable from '../components/categories_table';
+import { centsToCurrency } from '../utils/formatters';
+
 const DashboardPage: FC = () => {
+  const dispatch = useDispatch()
+  const { incomes, expenses } = useGlobalState('category')
+  const { month, year } = useGlobalState('common')
+
+  useEffect(() => {
+    if (!month || !year) { return }
+    dispatch({ type: 'categories-loading' })
+    loadCategories(month, year)
+      .then((categories) => dispatch({ type: 'categories-loaded', categories }))
+      .catch(() => dispatch({ type: 'categories-loaded', categories: [] }))
+  },[month, year, dispatch])
+
+  const incomeActual = sum(incomes.map((c) => sumBy(c.actualRows, 'actualCents')))
+  const expensesActual = sum(expenses.map((c) => sumBy(c.actualRows, 'actualCents')))
+  
+  const incomeBudget = sum(incomes.map((c) => sumBy(c.budgetRows, 'budgetCents')))
+  const expensesBudget = sum(expenses.map((c) => sumBy(c.budgetRows, 'budgetCents')))
+
+  const totals = {
+    incomes: {
+      actual: incomeActual,
+      budget: incomeBudget,
+    },
+    expenses: {
+      actual: expensesActual,
+      budget: expensesBudget,
+    },
+    current: {
+      actual: expensesActual - incomeActual,
+      budget: expensesBudget - expensesActual,
+    },
+  }
+
   return (
     <div>
       <div className="datepicker-header container-fluid">
@@ -16,27 +55,7 @@ const DashboardPage: FC = () => {
                 <div className="card-header">Income</div>
                 <div className="card-body">
                   <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Category</th>
-                          <th>Budget</th>
-                          <th>Actual</th>
-                          <th>Variance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th className="edit-cell">
-                            Sellary GF
-                            <i className="fa fa-pen text-sm"></i>
-                          </th>
-                          <td>$1000.00</td>
-                          <td>$984.00</td>
-                          <td>$1000</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <CategoriesTable categories={incomes} />
                     <div className="text-center">
                       <button className='btn btn-link text-primary'>
                         Add new Category
@@ -52,24 +71,7 @@ const DashboardPage: FC = () => {
                 <div className="card-header">Expenses</div>
                 <div className="card-body">
                   <div className="table-responsive">
-                    <table className="table table-hover">
-                      <thead>
-                        <tr>
-                          <th>Category</th>
-                          <th>Budget</th>
-                          <th>Actual</th>
-                          <th>Variance</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <th>Sellary GF</th>
-                          <td>$1000.00</td>
-                          <td>$984.00</td>
-                          <td>$1000</td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <CategoriesTable categories={expenses} />
                     <div className="text-center">
                       <button className='btn btn-link text-primary'>
                         Add new Category
@@ -85,55 +87,34 @@ const DashboardPage: FC = () => {
               <div className="card">
                 <div className="card-body">
                   <p className="lead">Current Balance</p>
-                  <div className="text-center display-4">$800.00</div>
+                  <div className="text-center display-4">{centsToCurrency(totals.current.actual)}</div>
                   <hr/>
-                  <p className="lead">Beginning of month</p>
+                  <p className="lead">Income</p>
                   <div className="row">
                     <div className="col">
-                      <div>Planned</div>
-                      <div>$0.00</div>
+                      <div>Budgeted</div>
+                      <div>{centsToCurrency(totals.incomes.budget)}</div>
                     </div>
                     <div className="col">
                       <div>Actual</div>
-                      <div>$0.00</div>
+                      <div>{centsToCurrency(totals.incomes.actual)}</div>
                     </div>
                   </div>
                   <hr/>
-                  <p className="lead">Total Budgeted</p>
+                  <p className="lead">Expenses</p>
                   <div className="row">
                     <div className="col">
-                      <div>Income</div>
-                      <div>$1000</div>
+                      <div>Budgeted</div>
+                      <div>{centsToCurrency(totals.expenses.budget)}</div>
                     </div>
                     <div className="col">
-                      <div>Expenses</div>
-                      <div>$1000</div>
-                    </div>
-                  </div>
-                  <hr/>
-                  <p className="lead">Total Actual</p>
-                  <div className="row">
-                    <div className="col">
-                      <div>Income</div>
-                      <div>-$1000</div>
-                    </div>
-                    <div className="col">
-                      <div>Expenses</div>
-                      <div>-$1000</div>
+                      <div>Actual</div>
+                      <div>{centsToCurrency(totals.expenses.actual)}</div>
                     </div>
                   </div>
                   <hr/>
                   <p className="lead">End of month</p>
-                  <div className="row">
-                    <div className="col">
-                      <div>Planned</div>
-                      <div>$0.00</div>
-                    </div>
-                    <div className="col">
-                      <div>Actual</div>
-                      <div>$0.00</div>
-                    </div>
-                  </div>
+                  <div className="text-center display-4">{centsToCurrency(totals.current.budget)}</div>
                 </div>
               </div>
             </div>

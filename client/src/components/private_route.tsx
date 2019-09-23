@@ -1,7 +1,7 @@
-import React, { useContext, StatelessComponent, ComponentType } from "react"
+import React, { StatelessComponent, ComponentType } from "react"
 import { Redirect, Route } from "react-router-dom"
 
-import * as Store from '../context/store'
+import { useGlobalState } from '../utils/state'
 
 interface IProps {
   path: string;
@@ -9,7 +9,7 @@ interface IProps {
 }
 
 const PrivateRoute: StatelessComponent<IProps> = ({component: Component, ...rest}) => {
-  const { currentUser, loaded } = useContext(Store.AuthCotext)
+  const { user: currentUser, loaded } = useGlobalState('account')
 
   if (!loaded) { return (<div></div>) }
 

@@ -1,13 +1,12 @@
-import React, { useState, FC } from 'react'
+import React, { FC } from 'react'
 import { BrowserRouter as Router, Route } from "react-router-dom"
 
-import cn from 'classnames'
-
-import * as Store from './context/store'
+import { Provider} from './utils/state'
 
 import PrivateRoute from './components/private_route'
 import HeaderNavigation from './components/header_navigation'
-import Navigation from './components/navigation'
+import Sidebar from './components/sidebar'
+import ContentInner from './components/content_inner'
 
 import LandingPage from './pages/landing'
 import DashboardPage from './pages/dashboard'
@@ -16,20 +15,18 @@ import './stylesheets/custom.css'
 import './stylesheets/style.default.css'
 
 const App: FC = () => {
-  const [navToggle, setNavToggle] = useState(false)
-
   return (
     <Router>
-      <Store.Context>
-        <HeaderNavigation setNavToggle={setNavToggle} navToggle={navToggle}/>
+      <Provider>
+        <HeaderNavigation/>
         <div className="page-content d-flex align-items-stretch"> 
-          <Navigation navToggle={navToggle}></Navigation>
-          <div className={cn('content-inner', { 'active': navToggle })}>
+          <Sidebar/>
+          <ContentInner>
             <Route path="/" exact component={LandingPage} />
             <PrivateRoute path="/dashboard" component={DashboardPage} />
-          </div>
+          </ContentInner>
         </div>
-      </Store.Context>
+      </Provider>
     </Router>
   )
 }

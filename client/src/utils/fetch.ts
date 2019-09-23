@@ -8,7 +8,7 @@ interface IResponse {
 const handleData = (response : IResponse) => {
   if (!response.ok) { throw response }
 
-  return response.json()
+  return response.json().then((json: any) => json.data)
 }
 
 const handleError = (error : any) => {

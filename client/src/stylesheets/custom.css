@@ -20,18 +20,30 @@ a[tabindex], [role=button] {
   padding-top: 13px;
 }
 
-th.edit-cell {
+.edit-cell {
   cursor: pointer;
 }
 
-th.edit-cell i {
+tr:hover .edit-cell .edit-icon {
+  color: #33b35a;
+}
+
+.edit-cell .edit-icon {
   font-size: 12px;
   padding-left: 5px;
-  color: #33b35a;
-  display: none;
+  color: white;
 }
 
 .menu-btn {
   background: none;
   border: none;
+}
+
+.table-child-row th {
+  font-weight: normal;
+  padding-left: 30px;
+}
+
+.budget-column, .actual-column, .variance-column {
+  width: 120px;
 }

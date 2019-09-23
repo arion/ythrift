@@ -3,6 +3,7 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: 'uniqueCategoryCombo',
     },
     kind: {
       type: DataTypes.STRING,
@@ -10,11 +11,17 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isIn: [['income', 'expense']],
       },
-      defaultValue: 'expense'
+      defaultValue: 'expense',
+      unique: 'uniqueCategoryCombo',
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      unique: 'uniqueCategoryCombo',
+    },
+    parentId: {
+      type: DataTypes.INTEGER,
+      unique: 'uniqueCategoryCombo',
     },
     archivedAt: {
       type: DataTypes.DATE
@@ -29,27 +36,6 @@ module.exports = (sequelize, DataTypes) => {
 
     Category.hasMany(models.BudgetRow, { foreignKey: 'categoryId', as: 'budgetRows' })
     Category.hasMany(models.ActualRow, { foreignKey: 'categoryId', as: 'actualRows' })
-  }
-
-  Category.findOrCreateWithParent = async function({ kind, name, parentName, userId }) {
-    try {
-      let parentCategory = null
-
-      if (parentName) {
-        parentCategory = await Category.findOrCreate({ where: { userId, name: parentName, kind } })
-      }
-
-      const attributes = { userId, name, kind }
-
-      if (parentCategory && parentCategory[0]) {
-        attributes.parentId = parentCategory[0].id
-      }
-
-      return Category.findOrCreate({ where: attributes })
-    } catch (error) {
-      console.error({ kind, name, parentName, userId }, error)
-      return null
-    }
   }
 
   return Category

@@ -2,5 +2,39 @@ export interface IUser {
   id: number;
   username: string;
   email: string;
-  loaded: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IActualRow {
+  id: number;
+  actualCents: number;
+  categoryId: number;
+  date: string;
+  createdAt: string;
+  updatedAt: string;
+  description: string;
+}
+
+export interface IBudgetRow {
+  id: number;
+  year: number;
+  month: number;
+  buddgetCents: number;
+  categoryId: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ICategory {
+  id: number;
+  name: string;
+  kind: 'expense' | 'income';
+  parentId: number | null;
+  actualRows: IActualRow[];
+  budgetRows: IBudgetRow[];
+  userId: number;
+  archivedAt: string;
+  createdAt: string;
+  updatedAt: string;
 }

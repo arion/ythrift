@@ -1,14 +1,15 @@
-import React, { FC }  from 'react'
+import React, { FC } from 'react'
 import { Link, withRouter, RouteComponentProps } from "react-router-dom"
 
 import cn from 'classnames'
 
-interface IProps {
-  navToggle: boolean;
-}
-const Navigation: FC<IProps & RouteComponentProps<{}>> = (props) => {
+import { useGlobalState } from '../utils/state'
+
+const Sidebar: FC<RouteComponentProps<{}>> = (props) => {
+  const { navToggle, month, year } = useGlobalState('common')
+  
   return (
-    <nav className={cn('side-navbar', { 'shrinked': props.navToggle })}>
+    <nav className={cn('side-navbar', { 'shrinked': navToggle })}>
       <ul className="list-unstyled">
         <li className={props.location.pathname === '/' ? 'active' : undefined}>
           <Link to="/">
@@ -17,7 +18,7 @@ const Navigation: FC<IProps & RouteComponentProps<{}>> = (props) => {
           </Link>
         </li>
         <li className={props.location.pathname === '/dashboard' ? 'active' : undefined}>
-          <Link to="/dashboard">
+          <Link to={`/dashboard?month=${month}&year=${year}`}>
             <i className="fa fa-money-bill-alt"></i>
             Dashboard
           </Link>
@@ -39,4 +40,4 @@ const Navigation: FC<IProps & RouteComponentProps<{}>> = (props) => {
   )
 }
 
-export default withRouter(Navigation)
+export default withRouter(Sidebar)

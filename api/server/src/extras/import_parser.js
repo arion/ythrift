@@ -26,12 +26,22 @@ export const processCSVRow = async (row, userId, rowMapping) => {
     if (!parsedRow) { return }
 
     // step 1: find category by name and kind or create category with parent
-    const category = await Category.findOrCreateWithParent({ 
-      kind: parsedRow.categoryKind, 
-      name: parsedRow.subCategoryName || parsedRow.mainCategoryName,
-      parentName: isEmpty(parsedRow.subCategoryName) ? null : parsedRow.mainCategoryName,
-      userId: parsedRow.userId
-    })
+    let parentCategory = null
+    const parentName = isEmpty(parsedRow.subCategoryName) ? null : parsedRow.mainCategoryName
+    const kind = parsedRow.categoryKind
+    const name = parsedRow.subCategoryName || parsedRow.mainCategoryName
+
+    if (parentName) {
+      parentCategory = await Category.findOrCreate({ where: { userId, name: parentName, kind } })
+    }
+
+    const attributes = { userId, name, kind }
+
+    if (parentCategory && parentCategory[0]) {
+      attributes.parentId = parentCategory[0].id
+    }
+
+    const category = await Category.findOrCreate({ where: attributes })
 
     if (!category) { 
       throw "Can't find or create category!" 
@@ -50,7 +60,7 @@ export const processCSVRow = async (row, userId, rowMapping) => {
       }
     })
 
-    console.log('actual row created', actualRow[0].id, parsedRow)
+    // console.log('actual row created', actualRow[0].id, parsedRow)
   } catch (error) {
     console.error(row, error)
     return null
