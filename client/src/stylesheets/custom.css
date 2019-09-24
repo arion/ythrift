@@ -20,10 +20,6 @@ a[tabindex], [role=button] {
   padding-top: 13px;
 }
 
-.edit-cell {
-  cursor: pointer;
-}
-
 tr:hover .edit-cell .edit-icon {
   color: #33b35a;
 }

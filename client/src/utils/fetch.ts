@@ -33,7 +33,13 @@ export const destroy = (path : string) => fetch(path, {
   credentials: 'include',
   method: 'DELETE',
   headers: {'Content-Type': 'application/json'}
-}).catch(handleError)
+})
+.then((response : IResponse) => {
+  if (!response.ok) { throw response }
+
+  return response
+})
+.catch(handleError)
 
 export const post = (path : string, payload : any) => {
   return fetch(path,

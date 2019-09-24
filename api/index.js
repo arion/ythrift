@@ -5,9 +5,9 @@ import bodyParser from 'body-parser'
 import morgan from 'morgan'
 import PassportUtil from '../api/server/utils/passport'
 
-import userRoutes from './server/routes/user_routes'
 import accountRoutes from './server/routes/account_routes'
 import categoryRoutes from './server/routes/category_routes'
+import budgetRowRoutes from './server/routes/budget_row_routes'
 
 config.config()
 
@@ -33,9 +33,9 @@ const passportUtil = new PassportUtil(app)
 
 const port = process.env.PORT
 
-app.use('/api/v1/users', passportUtil.loggedIn, userRoutes)
 app.use('/api/v1/account', passportUtil.loggedIn, accountRoutes)
 app.use('/api/v1/categories', passportUtil.loggedIn, categoryRoutes)
+app.use('/api/v1/budget_rows', passportUtil.loggedIn, budgetRowRoutes)
 
 // when a random route is inputed
 app.get('/api', (req, res) => res.status(200).send({

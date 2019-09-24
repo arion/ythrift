@@ -8,7 +8,10 @@ module.exports = {
       where: {
         parentId: {
           [Sequelize.Op.eq]: null
-        }
+        },
+        archivedAt: {
+          [Sequelize.Op.eq]: null
+        },
       }
     });
     return queryInterface.addConstraint('Categories', ['userId', 'parentId', 'kind', 'name'], {
@@ -17,7 +20,10 @@ module.exports = {
       where: {
         parentId: {
           [Sequelize.Op.ne]: null
-        }
+        },
+        archivedAt: {
+          [Sequelize.Op.eq]: null
+        },
       }
     });
   },

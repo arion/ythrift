@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
     Category.hasMany(models.Category, { foreignKey: 'parentId', as: 'childrens' })
     Category.belongsTo(models.Category, { foreignKey: 'parentId', as: 'parent' })
 
-    Category.hasMany(models.BudgetRow, { foreignKey: 'categoryId', as: 'budgetRows' })
+    Category.hasOne(models.BudgetRow, { foreignKey: 'categoryId', as: 'budgetRow' })
     Category.hasMany(models.ActualRow, { foreignKey: 'categoryId', as: 'actualRows' })
   }
 

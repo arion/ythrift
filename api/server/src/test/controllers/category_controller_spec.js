@@ -27,7 +27,6 @@ describe("Categories", () => {
         .get('/api/v1/categories')
         .set('Authorization', 'bearer ' + user.jwtToken)
         .end((err, res) => {
-          console.log(res)
           res.should.have.status(200)
           res.should.be.json
           res.body.should.be.a('object')

@@ -20,7 +20,7 @@ export interface IBudgetRow {
   id: number;
   year: number;
   month: number;
-  buddgetCents: number;
+  budgetCents: number;
   categoryId: number;
   createdAt: string;
   updatedAt: string;
@@ -32,9 +32,9 @@ export interface ICategory {
   kind: 'expense' | 'income';
   parentId: number | null;
   actualRows: IActualRow[];
-  budgetRows: IBudgetRow[];
+  budgetRow?: IBudgetRow | null;
   userId: number;
-  archivedAt: string;
+  archivedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }

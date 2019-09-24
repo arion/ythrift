@@ -1,5 +1,6 @@
-import { IUser, ICategory } from '../utils/interfaces'
-import { groupBy } from 'lodash' 
+import { IUser, ICategory, IBudgetRow } from '../utils/interfaces'
+import { filter } from 'lodash'
+import moment from 'moment'
 
 export type IAction =
   | { type: 'common-navToggle' }
@@ -10,6 +11,8 @@ export type IAction =
   
   | { type: 'categories-loading' }
   | { type: 'categories-loaded', categories: ICategory[] }
+  | { type: 'categories-updated', category: ICategory }
+  | { type: 'categories-budget-row-updated', categoryId: number, budgetRow: IBudgetRow }
 
 export const initialState = {
   account: {
@@ -22,13 +25,23 @@ export const initialState = {
     year: undefined as number | undefined,
   },
   category: {
-    incomes: [] as ICategory[],
-    expenses: [] as ICategory[],
+    categories: [] as ICategory[],
     loaded: false,
   }
 }
 
 export type IState = typeof initialState;
+
+const categoriesFilter = (categories: ICategory[], month: number, year: number) => {
+  return filter(categories, (c) => {
+    if (!c.archivedAt || !c.archivedAt.length) { return true }
+    const archivedAt = moment(c.archivedAt).startOf('month')
+    const currentDate = moment(`${month}-${year}`, 'MM-YYYY').startOf('month')
+    if (archivedAt > currentDate) { return true }
+
+    return false
+  })
+}
 
 export function reducer(state: IState, action : IAction) {
   console.log('dispatch', action)
@@ -67,21 +80,43 @@ export function reducer(state: IState, action : IAction) {
     case 'categories-loading': return { 
       ...state, 
       category: {
-        incomes: [],
-        expenses: [],
+        categories: [],
         loaded: false,
       },
     }
     case 'categories-loaded': {
-      const groupedCategories = groupBy(action.categories, 'kind')
+      const filteredCategories = categoriesFilter(action.categories, state.common.month!, state.common.year!)
 
       return { 
         ...state, 
         category: {
-          incomes: groupedCategories['income'] || [],
-          expenses: groupedCategories['expense'] || [], 
+          categories: filteredCategories,
           loaded: true,
         },
+      }
+    }
+    case 'categories-updated': {
+      const updatedCategories = state.category.categories.map((c) => c.id === action.category.id ? { ...action.category, actualRows: c.actualRows, budgetRow: c.budgetRow } : c)
+      const filteredCategories = categoriesFilter(updatedCategories, state.common.month!, state.common.year!)
+
+      return {
+        ...state,
+        category: {
+          ...state.category,
+          categories: filteredCategories
+        }
+      }
+    }
+
+    case 'categories-budget-row-updated': {
+      const updatedCategories = state.category.categories.map((c) => c.id === action.categoryId ? { ...c, budgetRow: action.budgetRow } : c)
+
+      return {
+        ...state,
+        category: {
+          ...state.category,
+          categories: updatedCategories
+        }
       }
     }
 

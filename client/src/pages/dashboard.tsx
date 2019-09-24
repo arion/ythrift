@@ -1,5 +1,5 @@
 import React, { FC, useEffect } from 'react'
-import { sum, sumBy } from 'lodash'
+import { sum, sumBy, groupBy } from 'lodash'
 
 import MonthSelector from '../components/month_selector'
 
@@ -10,8 +10,12 @@ import { centsToCurrency } from '../utils/formatters';
 
 const DashboardPage: FC = () => {
   const dispatch = useDispatch()
-  const { incomes, expenses } = useGlobalState('category')
+  const { categories } = useGlobalState('category')
   const { month, year } = useGlobalState('common')
+
+  const groupedCategories = groupBy(categories, 'kind')
+  const incomes = groupedCategories['income'] || []
+  const expenses = groupedCategories['expense'] || []
 
   useEffect(() => {
     if (!month || !year) { return }
@@ -24,8 +28,8 @@ const DashboardPage: FC = () => {
   const incomeActual = sum(incomes.map((c) => sumBy(c.actualRows, 'actualCents')))
   const expensesActual = sum(expenses.map((c) => sumBy(c.actualRows, 'actualCents')))
   
-  const incomeBudget = sum(incomes.map((c) => sumBy(c.budgetRows, 'budgetCents')))
-  const expensesBudget = sum(expenses.map((c) => sumBy(c.budgetRows, 'budgetCents')))
+  const incomeBudget = sum(incomes.map((c) => (c.budgetRow ? c.budgetRow.budgetCents : 0)))
+  const expensesBudget = sum(expenses.map((c) => (c.budgetRow ? c.budgetRow.budgetCents : 0)))
 
   const totals = {
     incomes: {
@@ -55,14 +59,7 @@ const DashboardPage: FC = () => {
                 <div className="card-header">Income</div>
                 <div className="card-body">
                   <div className="table-responsive">
-                    <CategoriesTable categories={incomes} />
-                    <div className="text-center">
-                      <button className='btn btn-link text-primary'>
-                        Add new Category
-                        &nbsp;
-                        <i className="fa fa-plus"></i>
-                      </button>
-                    </div>
+                    <CategoriesTable categories={incomes} kind="income" />
                   </div>
                 </div>
               </div>
@@ -71,14 +68,7 @@ const DashboardPage: FC = () => {
                 <div className="card-header">Expenses</div>
                 <div className="card-body">
                   <div className="table-responsive">
-                    <CategoriesTable categories={expenses} />
-                    <div className="text-center">
-                      <button className='btn btn-link text-primary'>
-                        Add new Category
-                        &nbsp;
-                        <i className="fa fa-plus"></i>
-                      </button>
-                    </div>
+                    <CategoriesTable categories={expenses} kind="expense" />
                   </div>
                 </div>
               </div>

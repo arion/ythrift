@@ -1,29 +1,26 @@
 import React, { FC } from "react"
+import { withRouter, RouteComponentProps } from "react-router-dom"
 
 import { monthToString } from '../utils/formatters'
 import { useDispatch, useGlobalState } from '../utils/state'
 
-const MonthSelector: FC<{}> = (props) => {
+const MonthSelector: FC<RouteComponentProps<{}>> = (props) => {
   const dispatch = useDispatch()
   const { month, year } = useGlobalState('common')
 
   if (!month || !year) { return (<div></div>) }
 
-  const prevMonth = () => {
-    if (month === 1) {
-      dispatch({ type: 'common-dateChange', year: year - 1, month: 12 })
-    } else {
-      dispatch({ type: 'common-dateChange', year: year, month: month - 1 })
-    }
+  const changeDate = (year: number, month: number) => {
+    dispatch({ type: 'common-dateChange', year: year, month: month })
+    
+    props.history.push({
+      pathname: props.location.pathname,
+      search: `?month=${month}&year=${year}`
+    })
   }
 
-  const nextMonth = () => {
-    if (month === 12) {
-      dispatch({ type: 'common-dateChange', year: year + 1, month: 1 })
-    } else {
-      dispatch({ type: 'common-dateChange', year: year, month: month + 1 })
-    }
-  }
+  const prevMonth = () => (month === 1) ? changeDate(year - 1, 12) : changeDate(year, month - 1)
+  const nextMonth = () => (month === 12) ? changeDate(year + 1, 1) : changeDate(year, month + 1)
 
   return (
       <div className="month-picker picker-element">
@@ -46,4 +43,4 @@ const MonthSelector: FC<{}> = (props) => {
   )
 }
 
-export default MonthSelector
+export default withRouter(MonthSelector)

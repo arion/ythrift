@@ -40,7 +40,7 @@ class CategoryController {
           },
           { 
             model: BudgetRow, 
-            as: 'budgetRows',
+            as: 'budgetRow',
             where: { month, year },
             required: false,
           },
@@ -72,7 +72,7 @@ class CategoryController {
   }
 
   static async update(req, res) {
-    const attributes = params(req.body).only(['name', 'archivedAt', 'kind', 'parentId'])
+    const attributes = params(req.body).only(['name', 'archivedAt'])
     const { id } = req.params
     if (!Number(id)) {
       util.setError(400, 'Please input a valid numeric value')
