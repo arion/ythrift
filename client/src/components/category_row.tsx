@@ -87,7 +87,8 @@ const CategoryRow: FC<IProps> = (props) => {
   const saveBudget = () => {
     setSavingBudget(true)
     setEditBudget(false)
-    return (category.budgetRow && category.budgetRow.id) ? updateBudget() : createBudget()
+    const budgetRow = category.budgetRow
+    return (budgetRow && budgetRow.id && budgetRow.month === month && budgetRow.year === year) ? updateBudget() : createBudget()
   }
 
   return (

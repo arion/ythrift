@@ -3,7 +3,7 @@ import Util from '../utils/utils'
 import params from 'params'
 import moment from 'moment'
 
-import { Op } from 'sequelize'
+import { Op, literal } from 'sequelize'
 
 const { Category, ActualRow, BudgetRow } = database
 
@@ -41,7 +41,17 @@ class CategoryController {
           { 
             model: BudgetRow, 
             as: 'budgetRow',
-            where: { month, year },
+            where: {
+              id: {
+                [Op.in]: literal(`(
+                  select DISTINCT ON ("BudgetRows"."categoryId") id
+                  from "BudgetRows"
+                  where "BudgetRows"."categoryId" = "budgetRow"."categoryId"
+                  and to_date("BudgetRows".month || '-' || "BudgetRows".year, 'MM-YYYY') <= to_date('${month}-${year}', 'MM-YYYY')
+                  order by "BudgetRows"."categoryId", to_date("BudgetRows".month || '-' || "BudgetRows".year, 'MM-YYYY') desc                  
+                )`)
+              }
+            },
             required: false,
           },
         ],
