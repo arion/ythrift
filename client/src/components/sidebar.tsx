@@ -23,16 +23,23 @@ const Sidebar: FC<RouteComponentProps<{}>> = (props) => {
             Dashboard
           </Link>
         </li>
-        <li className={props.location.pathname === '/reports' ? 'active' : undefined}>
-          <Link to="/reports">
+        <li className={props.location.pathname === '/transactions' ? 'active' : undefined}>
+          <Link to="/transactions">
+            <i className="fa fa-file-invoice-dollar"></i>
+            Transactions
+          </Link>
+        </li>
+        <li className={props.location.pathname === '/report' ? 'active' : undefined}>
+          <Link to="/report">
             <i className="fa fa-chart-pie"></i>
-            Reports
+            Report
           </Link>
         </li>
         <li className={props.location.pathname === '/settings' ? 'active' : undefined}>
           <Link to="/settings">
             <i className="fa fa-cog"></i>
-            Settings
+            {/* import, export, view all categoris with unarchive method */}
+            Settings 
           </Link>
         </li>
       </ul>

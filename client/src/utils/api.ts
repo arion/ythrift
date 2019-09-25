@@ -10,6 +10,11 @@ export function loadCategories(month: number, year: number) {
   return get(path)
 }
 
+export function createCategory(payload: object) {
+  const path = `/api/v1/categories`
+  return post(path, payload)
+}
+
 export function updateCategory(categoryId: number, payload: object) {
   const path = `/api/v1/categories/${categoryId}`
   return put(path, payload)

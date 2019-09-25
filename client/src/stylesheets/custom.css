@@ -43,3 +43,13 @@ tr:hover .edit-cell .edit-icon {
 .budget-column, .actual-column, .variance-column {
   width: 120px;
 }
+
+.btn-link:focus {
+  box-shadow: none !important;
+}
+
+@media (min-width: 576px) {
+  .modal-dialog {
+    margin-top: 150px;
+  }
+}

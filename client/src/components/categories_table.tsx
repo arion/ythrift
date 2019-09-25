@@ -3,6 +3,7 @@ import { filter, sortBy } from 'lodash'
 
 import { ICategory } from "../utils/interfaces";
 import CategoryRow from '../components/category_row'
+import AddCategoryModal from '../components/add_category_modal'
 
 interface IProps {
   categories: ICategory[];
@@ -10,9 +11,10 @@ interface IProps {
 }
 
 const CategoriesTable: FC<IProps> = (props) => {
-  const { categories } = props
 
-  const rootCategories = filter(categories, { parentId: null })
+  const { categories, kind } = props
+
+  const rootCategories = sortBy(filter(categories, { parentId: null }), 'name')
 
   return (
     <Fragment>
@@ -26,7 +28,7 @@ const CategoriesTable: FC<IProps> = (props) => {
           </tr>
         </thead>
         <tbody>
-          { sortBy(rootCategories, 'name').map((rootCategory) => {
+          { rootCategories.map((rootCategory) => {
             const childrenCategories = filter(categories, { parentId: rootCategory.id })
             return (
               <Fragment key={rootCategory.id}>
@@ -40,11 +42,7 @@ const CategoriesTable: FC<IProps> = (props) => {
         </tbody>
       </table>
       <div className="text-center">
-        <button className='btn btn-link text-primary'>
-          Add new Category
-          &nbsp;
-          <i className="fa fa-plus"></i>
-        </button>
+        <AddCategoryModal rootCategories={rootCategories} kind={kind}></AddCategoryModal >
       </div>
     </Fragment>
   )

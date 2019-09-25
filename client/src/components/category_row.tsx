@@ -1,12 +1,13 @@
 import React, { FC, useState, Fragment, ChangeEvent } from "react"
 import cn from 'classnames'
 import moment from 'moment'
-import { sum, sumBy } from 'lodash'
+import { sumBy } from 'lodash'
 
 import { ICategory } from "../utils/interfaces";
 import { centsToCurrency, centsToFloat, floatToCents } from '../utils/formatters'
 import * as API  from "../utils/api";
 import { useDispatch, useGlobalState } from "../utils/state";
+import AddActualRowModal from "./add_actual_row_modal";
 
 interface IProps {
   category: ICategory;
@@ -21,7 +22,6 @@ const CategoryRow: FC<IProps> = (props) => {
   const { category, isRoot, haveChildren } = props
 
   const [editCategory, setEditCategory] = useState(false)
-  const [savingCategory, setSavingCategory] = useState(false)
 
   const [editBudget, setEditBudget] = useState(false)
   const [savingBudget, setSavingBudget] = useState(false)
@@ -41,7 +41,6 @@ const CategoryRow: FC<IProps> = (props) => {
   }
 
   const saveCategory = () => {
-    setSavingCategory(true)
     setEditCategory(false)
     API.updateCategory(category.id, { name: categoryName })
       .then((updatedCategory) => { 
@@ -49,18 +48,15 @@ const CategoryRow: FC<IProps> = (props) => {
         setCategoryName(updatedCategory.name)
       })
       .catch(() => setCategoryName(category.name))
-      .finally(() => setSavingCategory(false))
   }
 
   const removeCategory = () => {
-    if (window.confirm("Are you sure?")) {
-      setSavingCategory(true)
+    if (window.confirm("Are you sure, you want to archive this category?")) {
       const archiveFrom = moment(`${month}-${year}`, 'MM-YYYY').startOf('month').format()
       API.archiveCategory(category.id, archiveFrom)
         .then((updatedCategory) => { 
           dispatch({ type: 'categories-updated', category: updatedCategory }) 
         })
-        .finally(() => setSavingCategory(false))
     }
   }
 
@@ -95,26 +91,31 @@ const CategoryRow: FC<IProps> = (props) => {
     <tr className={isRoot ? 'table-root-row' : 'table-child-row'}>
       <th className="edit-cell">
         { editCategory && (
-          <Fragment>
+          <div className="input-group">
             <input 
               type="text" 
               className="form-control form-control-sm" 
               value={ categoryName } 
-              onBlur={() => saveCategory()} 
               onKeyDown={(e) => e.key === 'Enter' && saveCategory()} 
               onChange={handleCategoryChange}
               autoFocus />
-          </Fragment>
+              <div className="input-group-append">
+                <button className="btn btn-success btn-sm" onClick={() => saveCategory()} title="Save">
+                  <i className="fa fa-check text-sm"></i>
+                </button>
+                { !haveChildren && (
+                  <button className="btn btn-danger btn-sm" onClick={() => removeCategory()} title="Archive">
+                    <i className="fa fa-times text-sm"></i>
+                  </button>
+                )}
+              </div>
+          </div>
         ) }
         { !editCategory && (
-          <Fragment>
+          <div onClick={() => setEditCategory(true)} role="button">
             { category.name }
-            <i className="fa fa-pen text-sm edit-icon" onClick={() => setEditCategory(true)} role="button" title="Edit"></i>
-            &nbsp;
-            { !haveChildren && (
-              <i className="fa fa-times text-sm edit-icon" onClick={() => !savingCategory && removeCategory()} role="button" title="Remove"></i>
-            )}
-          </Fragment>
+            <i className="fa fa-pen text-sm edit-icon" title="Edit"></i>
+          </div>
         ) }
       </th>
       <td className={cn('edit-cell', { '-saving': savingBudget })}>
@@ -131,17 +132,16 @@ const CategoryRow: FC<IProps> = (props) => {
           </Fragment>
         ) }
         { !editBudget && (
-          <Fragment>
+          <div onClick={() => !savingBudget && setEditBudget(true)} role="button">
             { centsToCurrency(budget) }
-            <i className="fa fa-pen text-sm edit-icon" onClick={() => !savingBudget && setEditBudget(true)} role="button" title="Edit"></i>
-          </Fragment>
+            <i className="fa fa-pen text-sm edit-icon" title="Edit"></i>
+          </div>
         ) }
       </td>
       <td className="edit-cell">
-        { centsToCurrency(actual) }
-        <i className="fa fa-plus text-sm edit-icon" title="Add" role="button"></i>
+        <AddActualRowModal category={category} actual={actual}></AddActualRowModal>
       </td>
-      <td>{ centsToCurrency(budget - actual) }</td>
+      <td className={cn({'text-danger': (budget - actual) < 0 })}>{ centsToCurrency(budget - actual) }</td>
     </tr>
   )
 }

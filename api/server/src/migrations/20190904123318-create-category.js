@@ -18,10 +18,6 @@ module.exports = {
       },
       parentId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: 'Categories',
-          key: 'id',
-        },
       },
       userId: {
         type: Sequelize.INTEGER,

@@ -3,7 +3,6 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: 'uniqueCategoryCombo',
     },
     kind: {
       type: DataTypes.STRING,
@@ -12,21 +11,25 @@ module.exports = (sequelize, DataTypes) => {
         isIn: [['income', 'expense']],
       },
       defaultValue: 'expense',
-      unique: 'uniqueCategoryCombo',
     },
     userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      unique: 'uniqueCategoryCombo',
     },
     parentId: {
       type: DataTypes.INTEGER,
-      unique: 'uniqueCategoryCombo',
     },
     archivedAt: {
-      type: DataTypes.DATE
+      type: DataTypes.DATE,
     },
-  }, {})
+  }, {
+    indexes: [
+      {
+        unique: true,
+        fields: ['name', 'kind', 'userId', 'parentId', 'archivedAt']
+      }
+    ]
+  })
   Category.associate = function(models) {
     // associations can be defined here
     Category.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })

@@ -3,7 +3,7 @@ import Util from '../utils/utils'
 import params from 'params'
 import moment from 'moment'
 
-import { Op, literal } from 'sequelize'
+import { Op, literal, UniqueConstraintError } from 'sequelize'
 
 const { Category, ActualRow, BudgetRow } = database
 
@@ -76,7 +76,11 @@ class CategoryController {
       util.setSuccess(201, 'Added!', resource)
       return util.send(res)
     } catch (error) {
-      util.setError(400, error.message)
+      if (error instanceof UniqueConstraintError) {
+        util.setError(400, "Category with this name already exists. Manage your categories on the Settings page.")
+      } else {
+        util.setError(400, error.message)
+      }
       return util.send(res)
     }
   }

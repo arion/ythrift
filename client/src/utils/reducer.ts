@@ -12,6 +12,7 @@ export type IAction =
   | { type: 'categories-loading' }
   | { type: 'categories-loaded', categories: ICategory[] }
   | { type: 'categories-updated', category: ICategory }
+  | { type: 'categories-created', category: ICategory }
   | { type: 'categories-budget-row-updated', categoryId: number, budgetRow: IBudgetRow }
 
 export const initialState = {
@@ -93,6 +94,17 @@ export function reducer(state: IState, action : IAction) {
           categories: filteredCategories,
           loaded: true,
         },
+      }
+    }
+    case 'categories-created': {
+      const newCategory = { ...action.category, budgetRow: null, actualRows: [] }
+
+      return {
+        ...state,
+        category: {
+          ...state.category,
+          categories: [...state.category.categories, newCategory]
+        }
       }
     }
     case 'categories-updated': {

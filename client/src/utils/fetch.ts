@@ -21,7 +21,7 @@ const handleError = (error : any) => {
   }
 
   return error.json().then((data : any) => {
-    if (data.error) { errorMessage = data.error }
+    if (data.message) { errorMessage = data.message }
     notifier.error(errorMessage)
     throw new Error(errorMessage)
   })
